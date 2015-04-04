@@ -21,10 +21,6 @@ def align amount, unit_width = 8, decimal_width = 8
   format pattern, amount
 end
 
-def round_to_satoshis btc
-  BigDecimal(format '%17.8f', btc)
-end
-
 def truncate_at_satoshis btc
   string = btc.to_s '8F'
 
@@ -40,7 +36,7 @@ def btc_per_block reward_era
     reward /= 2
   end
 
-  reward_era == 34 ? BigDecimal(0) : reward
+  reward_era == 34 ? BigDecimal(0) : truncate_at_satoshis(reward)
 end
 
 def year reward_era
@@ -88,25 +84,22 @@ def end_btc_percent_of_limit reward_era
 end
 
 def output hash
-  truncated = truncate_at_satoshis(hash[:btc_per_block])
-  # rounded   = round_to_satoshis(hash[:btc_per_block])
-
-  puts format('%7d', hash[:block])      +
-       " : "                            +
+  puts format('%7d', hash[:block])       +
+       " : "                             +
        format('%10d', hash[:reward_era]) +
-       " : "                            +
-       align(truncated,2)               +
-       " : "                            +
-       hash[:year]                      +
-       " : "                            +
-       align(hash[:start_btc])          +
-       " : "                            +
-       align(hash[:btc_added])          +
-       " : "                            +
-       align(hash[:end_btc])            +
-       " : "                            +
-       align(hash[:btc_increase], 3, 8) +
-       " : "                            +
+       " : "                             +
+       align(hash[:btc_per_block],2)     +
+       " : "                             +
+       hash[:year]                       +
+       " : "                             +
+       align(hash[:start_btc])           +
+       " : "                             +
+       align(hash[:btc_added])           +
+       " : "                             +
+       align(hash[:end_btc])             +
+       " : "                             +
+       align(hash[:btc_increase], 3, 8)  +
+       " : "                             +
        align(hash[:end_btc_percent_of_limit], 9 ,8)
   # ap hash
 end
