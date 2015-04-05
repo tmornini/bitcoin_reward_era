@@ -9,10 +9,15 @@ require 'bundler/setup'
 require 'awesome_print'
 
 class RewardEra
-  def self.header
-    '  Block   Reward Era     BTC/block       Year           Start BTC' \
-    '           BTC Added             End BTC   BTC % Increase'\
-    '   End BTC % of Limit'
+  def self.report
+    report_string = header + "\n"
+
+    1.upto(34) do |reward_era_number|
+      report_string += new(reward_era_number).to_s
+      report_string += "\n"
+    end
+
+    report_string
   end
 
   def self.output_block_zero_times
@@ -121,6 +126,12 @@ class RewardEra
   SECONDS_PER_REWARD_ERA = BLOCKS_PER_REWARD_ERA * 10 * 60
   GENESIS_BLOCK_TIME     = Time.at(1231006505).utc
 
+  def self.header
+    '  Block   Reward Era     BTC/block       Year           Start BTC' \
+    '           BTC Added             End BTC   BTC % Increase'\
+    '   End BTC % of Limit'
+  end
+
   attr_reader :reward_era
 
   def last_reward_era_number
@@ -210,8 +221,4 @@ ap RewardEra.output_block_zero_times
 
 puts
 
-puts RewardEra.header
-
-1.upto(34) do |reward_era_number|
-  puts RewardEra.new(reward_era_number).to_s
-end
+puts RewardEra.report
