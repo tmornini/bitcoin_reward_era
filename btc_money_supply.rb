@@ -64,9 +64,9 @@ end
 def year reward_era
   block_zero_time = Time.parse '2009-01-03 18:15:05 GMT'
 
-  minutes_since_zero = block(reward_era) * 10 * 60
+  seconds_since_block_zero = block(reward_era) * 60 * 10
 
-  reward_era_time = block_zero_time + minutes_since_zero
+  reward_era_time = block_zero_time + seconds_since_block_zero
 
   year = reward_era_time.year
 
