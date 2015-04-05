@@ -49,6 +49,18 @@ def btc_per_block reward_era
   truncate_at_satoshis reward
 end
 
+def portion_of_year year, day_of_year
+  beginning_of_this_year = Time.parse "1/1/#{year}"
+  beginning_of_next_year = Time.parse "1/1/#{year + 1}"
+
+  seconds_in_year = beginning_of_next_year - beginning_of_this_year
+  minutes_in_year = seconds_in_year / 60
+  hours_in_year   = minutes_in_year / 60
+  days_in_year    = hours_in_year / 24
+
+  day_of_year / days_in_year
+end
+
 def year reward_era
   block_zero_time = Time.parse '2009-01-03 18:15:05 GMT'
 
@@ -58,9 +70,7 @@ def year reward_era
 
   year = reward_era_time.year
 
-  portion_of_year = reward_era_time.yday / 365.25
-
-  format '%8.3f', year + portion_of_year
+  format '%8.3f', year + portion_of_year(year, reward_era_time.yday)
 end
 
 def start_btc reward_era
