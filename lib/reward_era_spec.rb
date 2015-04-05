@@ -13,8 +13,8 @@ Class RewardEra do
       subject.report_string.length.must_equal 5880
 
       Digest::SHA256.hexdigest(subject.report_string)
-      .must_equal '6b54d5484000f0cbed42dd70b4c857f' \
-                  '18528543b64cb07fc8a7e285ce74d9ba4'
+        .must_equal '6b54d5484000f0cbed42dd70b4c857f' \
+                    '18528543b64cb07fc8a7e285ce74d9ba4'
     end
   end
 
