@@ -1,10 +1,11 @@
 # -*- encoding : utf-8 -*-
 
-$LOAD_PATH.unshift 'lib'
-
 require 'rake/testtask'
 
-task default: 'spec:unit'
+task :default do
+  task('spec:unit').invoke
+  sh 'rubocop --fail-fast --display-cop-name'
+end
 
 namespace :spec do
   Rake::TestTask.new :unit do |task|

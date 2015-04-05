@@ -10,6 +10,8 @@ require 'minitest/autorun'
 
 MiniTest::Test.parallelize_me!
 
+# rubocop:disable all
+
 module Kernel
   def Class thing, &block
     describe_set_subject thing, &block
