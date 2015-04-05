@@ -3,7 +3,9 @@
 require 'bigdecimal'
 require 'time'
 
-require 'awesome_print'
+require 'rubygems'
+
+require 'bundler/setup'
 
 BLOCKS_PER_REWARD_ERA = 210_000
 
@@ -36,7 +38,7 @@ def btc_per_block reward_era
     reward /= 2
   end
 
-  reward_era == 34 ? BigDecimal(0) : truncate_at_satoshis(reward)
+  truncate_at_satoshis reward
 end
 
 def year reward_era
