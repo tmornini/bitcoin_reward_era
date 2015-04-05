@@ -20,7 +20,7 @@ class RewardEra
     report_string
   end
 
-  def self.output_block_zero_times
+  def self.block_zero_times
     {
       yours:           Time.at(1231002905).utc,
       wikipedia:       Time.at(1231006505).utc,
@@ -28,22 +28,18 @@ class RewardEra
     }
   end
 
-  def initialize reward_era
-    @reward_era = reward_era
+  def initialize reward_era_number
+    @reward_era_number = reward_era_number
   end
 
   def first_block_in_era
-    (@reward_era - 1) * BLOCKS_PER_REWARD_ERA
+    last_reward_era_number * BLOCKS_PER_REWARD_ERA
   end
 
   def btc_per_block
     reward = BigDecimal 50
 
-    1.upto last_reward_era_number do
-      reward /= 2
-    end
-
-    truncate_at_satoshis reward
+    truncate_at_satoshis reward / (2 ** last_reward_era_number)
   end
 
   def year
@@ -55,11 +51,9 @@ class RewardEra
   def start_btc
     btc_in_circulation = 0
 
-    1.upto last_reward_era_number do |reward_era_number|
-      a_reward_era = self.class.new reward_era_number
-
+    1.upto last_reward_era_number do |ren|
       btc_in_circulation +=
-        a_reward_era.btc_per_block * BLOCKS_PER_REWARD_ERA
+        self.class.new(ren).btc_per_block * BLOCKS_PER_REWARD_ERA
     end
 
     btc_in_circulation
@@ -73,51 +67,53 @@ class RewardEra
     next_reward_era.start_btc
   end
 
-  def btc_increase
-    if @reward_era == 1
-      'infinite'
-    else
-      btc_added / last_reward_era.end_btc
-    end
+  def btc_increase_percentage
+    btc_added / last_reward_era.end_btc
   end
 
   def end_btc_percent_of_limit
     end_btc / final_reward_era.end_btc
   end
 
+  def supply_inflation_rate
+    ((1 + btc_increase_percentage) ** 0.25) - 1
+  end
 
   def to_representation
     {
       block:                    block,
-      reward_era:               reward_era,
+      reward_era_number:        reward_era_number,
       btc_per_block:            btc_per_block,
       year:                     year,
       start_btc:                start_btc,
       btc_added:                btc_added,
       end_btc:                  end_btc,
-      btc_increase:             btc_increase,
-      end_btc_percent_of_limit: end_btc_percent_of_limit
+      btc_increase_percentage:  btc_increase_percentage,
+      end_btc_percent_of_limit: end_btc_percent_of_limit,
+      supply_inflation_rate:    supply_inflation_rate
     }
   end
 
   def to_s
-    format('%7d', first_block_in_era) +
-    ' : '                             +
-    format('%10d', reward_era)        +
-    ' : '                             +
-    align(btc_per_block, 2)           +
-    ' : '                             +
-    year                              +
-    ' : '                             +
-    align(start_btc)                  +
-    ' : '                             +
-    align(btc_added)                  +
-    ' : '                             +
-    align(end_btc)                    +
-    ' : '                             +
-    percentage(btc_increase, 4, 8)    +
-    ' : '                             +
-    percentage(end_btc_percent_of_limit, 8 ,8)
+    format('%7d', first_block_in_era)          +
+    ' : '                                      +
+    format('%10d', reward_era_number)          +
+    ' : '                                      +
+    align(btc_per_block, 2)                    +
+    ' : '                                      +
+    year                                       +
+    ' : '                                      +
+    align(start_btc)                           +
+    ' : '                                      +
+    align(btc_added)                           +
+    ' : '                                      +
+    align(end_btc)                             +
+    ' : '                                      +
+    percentage(btc_increase_percentage, 4, 8)  +
+    ' : '                                      +
+    percentage(end_btc_percent_of_limit, 8 ,8) +
+    ' : '                                      +
+    percentage(supply_inflation_rate, 11 ,8)
   end
 
   private
@@ -129,17 +125,17 @@ class RewardEra
   def self.header
     '  Block   Reward Era     BTC/block       Year           Start BTC' \
     '           BTC Added             End BTC   BTC % Increase'\
-    '   End BTC % of Limit'
+    '   End BTC % of Limit   Supply Inflation Rate'
   end
 
-  attr_reader :reward_era
+  attr_reader :reward_era_number
 
   def last_reward_era_number
-    @reward_era - 1
+    reward_era_number - 1
   end
 
   def next_reward_era_number
-    @reward_era + 1
+    reward_era_number + 1
   end
 
   def last_reward_era
@@ -217,7 +213,7 @@ class RewardEra
   end
 end
 
-ap RewardEra.output_block_zero_times
+ap RewardEra.block_zero_times
 
 puts
 
