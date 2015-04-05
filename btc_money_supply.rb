@@ -16,11 +16,19 @@ end
 def align amount, unit_width = 8, decimal_width = 8
   total_length = unit_width + 1 + decimal_width
 
-  return format("%#{total_length}s",amount) if amount.is_a? String
-
   pattern = "%#{total_length}.#{decimal_width}f"
 
   format pattern, amount
+end
+
+def percentage amount, unit_width = 3, decimal_width = 8
+  total_length = unit_width + 1 + decimal_width
+
+  return format("%#{total_length + 1}s", amount) if amount.is_a? String
+
+  pattern = "%#{total_length}.#{decimal_width}f%"
+
+  format pattern, amount * 100
 end
 
 def truncate_at_satoshis btc
@@ -77,37 +85,37 @@ def btc_increase reward_era
   if reward_era == 1
     'infinite'
   else
-    (btc_added(reward_era) / end_btc(reward_era - 1)) * 100
+    btc_added(reward_era) / end_btc(reward_era - 1)
   end
 end
 
 def end_btc_percent_of_limit reward_era
-  (end_btc(reward_era) / end_btc(34)) * 100
+  end_btc(reward_era) / end_btc(34)
 end
 
 def output hash
-  puts format('%7d', hash[:block])       +
-       " : "                             +
-       format('%10d', hash[:reward_era]) +
-       " : "                             +
-       align(hash[:btc_per_block],2)     +
-       " : "                             +
-       hash[:year]                       +
-       " : "                             +
-       align(hash[:start_btc])           +
-       " : "                             +
-       align(hash[:btc_added])           +
-       " : "                             +
-       align(hash[:end_btc])             +
-       " : "                             +
-       align(hash[:btc_increase], 3, 8)  +
-       " : "                             +
-       align(hash[:end_btc_percent_of_limit], 9 ,8)
+  puts format('%7d', hash[:block])           +
+       ' : '                                 +
+       format('%10d', hash[:reward_era])     +
+       ' : '                                 +
+       align(hash[:btc_per_block],2)         +
+       ' : '                                 +
+       hash[:year]                           +
+       ' : '                                 +
+       align(hash[:start_btc])               +
+       ' : '                                 +
+       align(hash[:btc_added])               +
+       ' : '                                 +
+       align(hash[:end_btc])                 +
+       ' : '                                 +
+       percentage(hash[:btc_increase], 4, 8) +
+       ' : '                                 +
+       percentage(hash[:end_btc_percent_of_limit], 8 ,8)
   # ap hash
 end
 
 puts '  Block   Reward Era     BTC/block       Year           Start BTC' \
-     '           BTC Added             End BTC   BTC Increase'\
+     '           BTC Added             End BTC   BTC % Increase'\
      '   End BTC % of Limit'
 
 1.upto(34) do |reward_era|
