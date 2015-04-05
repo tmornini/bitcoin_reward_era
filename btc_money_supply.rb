@@ -4,14 +4,23 @@ require 'bigdecimal'
 require 'time'
 
 require 'rubygems'
-
 require 'bundler/setup'
+
+require 'awesome_print'
 
 class RewardEra
   def self.header
     '  Block   Reward Era     BTC/block       Year           Start BTC' \
     '           BTC Added             End BTC   BTC % Increase'\
     '   End BTC % of Limit'
+  end
+
+  def self.output_block_zero_times
+    {
+      yours:           Time.at(1231002905).utc,
+      wikipedia:       Time.at(1231006505).utc,
+      blockchain_info: Time.parse('2009-01-03T18:15:05Z')
+    }
   end
 
   def initialize reward_era
@@ -33,7 +42,7 @@ class RewardEra
   end
 
   def year
-    year = reward_era_time.year
+    year = beginning_of_reward_era.year
 
     format '%8.3f', year + portion_of_year
   end
@@ -108,7 +117,9 @@ class RewardEra
 
   private
 
-  BLOCKS_PER_REWARD_ERA = 210_000
+  BLOCKS_PER_REWARD_ERA  = 210_000
+  SECONDS_PER_REWARD_ERA = BLOCKS_PER_REWARD_ERA * 10 * 60
+  GENESIS_BLOCK_TIME     = Time.at(1231006505).utc
 
   attr_reader :reward_era
 
@@ -144,34 +155,36 @@ class RewardEra
     BigDecimal truncation_match[0]
   end
 
-  def block_zero_time
-    Time.parse '2009-01-03 18:15:05 GMT'
-  end
-
   def seconds_since_block_zero
     first_block_in_era * 60 * 10
   end
 
-  def reward_era_time
-    block_zero_time + seconds_since_block_zero
+  def beginning_of_reward_era
+    GENESIS_BLOCK_TIME + seconds_since_block_zero
   end
 
-  def reward_era_year
-    reward_era_time.year
+  def this_year
+    beginning_of_reward_era.year
   end
 
   def portion_of_year
-    this_year = reward_era_year
     next_year = this_year + 1
 
-    beginning_of_this_year = Time.new this_year, 1, 1
-    beginning_of_next_year = Time.new next_year, 1, 1
+    beginning_of_this_year = Time.new(this_year, 1, 1, 0, 0, 0, '+00:00').utc
+    beginning_of_next_year = Time.new(next_year, 1, 1, 0, 0, 0, '+00:00').utc
 
-    seconds_in_year = beginning_of_next_year - beginning_of_this_year
+    portion_of_this_year = (beginning_of_reward_era - beginning_of_this_year) /
+                           (beginning_of_next_year - beginning_of_this_year)
 
-    seconds_in_year_until_block = reward_era_time - beginning_of_this_year
+    ap beginning_of_this_year:    beginning_of_this_year,
+       beginning_of_this_year_i:  beginning_of_this_year.to_i,
+       beginning_of_reward_era:   beginning_of_reward_era,
+       beginning_of_reward_era_i: beginning_of_reward_era.to_i,
+       beginning_of_next_year:    beginning_of_next_year,
+       beginning_of_next_year_i:  beginning_of_next_year.to_i,
+       portion_of_this_year:      portion_of_this_year
 
-    seconds_in_year_until_block / seconds_in_year
+    portion_of_this_year
   end
 
   def align amount, unit_width = 8, decimal_width = 8
@@ -192,6 +205,10 @@ class RewardEra
     format pattern, amount * 100
   end
 end
+
+ap RewardEra.output_block_zero_times
+
+puts
 
 puts RewardEra.header
 
