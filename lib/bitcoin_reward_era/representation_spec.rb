@@ -6,9 +6,21 @@ require 'bitcoin_reward_era/representation'
 
 module BitcoinRewardEra
   Class Representation do
+    let(:config) { { reward_era_number: 1 } }
+
     RespondsTo :new do
-      ByReturning 'and instance' do
-        subject.new(reward_era_number: 1).must_be_instance_of Representation
+      ByReturning 'an instance' do
+        subject.new(config).must_be_instance_of Representation
+      end
+    end
+
+    Instance do
+      subject { Representation.new config }
+
+      RespondsTo :to_representation do
+        ByReturning 'a hash' do
+          subject.to_representation.must_be_instance_of Hash
+        end
       end
     end
   end

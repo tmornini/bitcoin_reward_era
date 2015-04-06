@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Bitcoin reward era gem'
 
   spec.description   = "Bitcoin reward era gem.\n" \
-                       '100% BigDecimal math (not Float or Fixnum).'
+                       '100% BigDecimal arithmetic.'
 
   spec.homepage      = 'https://github.com/tmornini/bitcoin_reward_era'
   spec.license       = 'MIT'
@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename f }
   spec.require_paths = ['lib']
 
+  spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bundler',            '~> 1.8'
   spec.add_development_dependency 'rake',               '~> 10'
   spec.add_development_dependency 'minitest',           '~> 5.5', '>= 5.5.1'

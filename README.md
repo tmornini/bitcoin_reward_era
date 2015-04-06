@@ -1,6 +1,6 @@
 Gem representing Bitcoin reward eras.
 
-100% BigDecimal math (not Float or Fixnum).
+100% BigDecimal arithmetic.
 
 ```
 gem install 'bitcoin_reward_era'

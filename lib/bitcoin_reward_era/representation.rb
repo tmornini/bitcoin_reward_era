@@ -11,7 +11,7 @@ module BitcoinRewardEra
 
     def to_representation
       {
-        block:                    @calculator.first_block_in_era,
+        first_block:              @calculator.first_block,
         reward_era_number:        @calculator.reward_era_number,
         btc_per_block:            @calculator.btc_per_block,
         year:                     @calculator.year,
@@ -26,7 +26,7 @@ module BitcoinRewardEra
 
     def to_s
       [
-        format('%7d', @calculator.first_block_in_era),
+        format('%7d', @calculator.first_block),
         format('%10d', @calculator.reward_era_number),
         align(@calculator.btc_per_block, 2),
         align(@calculator.year, 4, 3),
