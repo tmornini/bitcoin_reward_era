@@ -1,8 +1,8 @@
 # -*- encoding : utf-8 -*-
 
-require 'reward_era/representation'
+require 'bitcoin_reward_era/representation'
 
-module RewardEra
+module BitcoinRewardEra
   def self.report
     report_string = "#{HEADER}\n"
 

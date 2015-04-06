@@ -2,9 +2,6 @@
 
 $LOAD_PATH.unshift 'lib'
 
-require 'rubygems'
-require 'bundler/setup'
-
-require 'reward_era'
+require 'bitcoin_reward_era'
 
 puts RewardEra.report

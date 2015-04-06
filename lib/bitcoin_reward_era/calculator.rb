@@ -3,7 +3,7 @@
 require 'bigdecimal'
 require 'time'
 
-module RewardEra
+module BitcoinRewardEra
   class Calculator
     BLOCKS_PER_REWARD_ERA  = 210_000
     SECONDS_PER_REWARD_ERA = BLOCKS_PER_REWARD_ERA * 10 * 60

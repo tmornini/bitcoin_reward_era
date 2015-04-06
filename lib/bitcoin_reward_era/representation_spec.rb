@@ -1,12 +1,10 @@
 # -*- encoding : utf-8 -*-
 
-require 'digest'
-
 require 'spec_helper'
 
-require 'reward_era/representation'
+require 'bitcoin_reward_era/representation'
 
-module RewardEra
+module BitcoinRewardEra
   Class Representation do
     RespondsTo :new do
       ByReturning 'and instance' do

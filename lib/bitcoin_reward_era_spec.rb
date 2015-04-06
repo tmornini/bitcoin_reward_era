@@ -4,9 +4,9 @@ require 'spec_helper'
 
 require 'digest'
 
-require 'reward_era'
+require 'bitcoin_reward_era'
 
-Module RewardEra do
+Module BitcoinRewardEra do
   RespondsTo :report do
     ByReturning 'a report string' do
       subject.report.must_be_instance_of String

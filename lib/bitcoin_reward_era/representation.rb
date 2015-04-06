@@ -1,8 +1,8 @@
 # -*- encoding : utf-8 -*-
 
-require 'reward_era/calculator'
+require 'bitcoin_reward_era/calculator'
 
-module RewardEra
+module BitcoinRewardEra
   class Representation
     def initialize config
       @calculator =

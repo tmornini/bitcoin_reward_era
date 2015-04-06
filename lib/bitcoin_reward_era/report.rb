@@ -1,8 +1,8 @@
 # -*- encoding : utf-8 -*-
 
-require 'reward_era/model'
+require 'bitcoin_reward_era/model'
 
-module RewardEra
+module BitcoinRewardEra
   module Report
     def self.to_s
       report_string = header + "\n"
