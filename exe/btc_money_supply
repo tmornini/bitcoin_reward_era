@@ -4,4 +4,4 @@ $LOAD_PATH.unshift 'lib'
 
 require 'bitcoin_reward_era'
 
-puts RewardEra.report
+puts BitcoinRewardEra.report
